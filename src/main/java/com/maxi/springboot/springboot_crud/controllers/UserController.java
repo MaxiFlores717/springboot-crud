@@ -41,6 +41,11 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
     }
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody User user, BindingResult result) {
+        user.setAdmin(false);
+        return create(user, result);
+    }
 
     private ResponseEntity<Map<String, String>> validation(BindingResult result) {
         // TODO Auto-generated method stub

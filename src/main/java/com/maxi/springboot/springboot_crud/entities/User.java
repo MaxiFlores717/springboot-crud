@@ -46,6 +46,7 @@ public class User {
 
     // no es de persistencia, sino propio de la clase
     @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean admin;
 
 
