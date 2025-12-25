@@ -22,10 +22,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tools.jackson.core.JacksonException;
-import tools.jackson.core.exc.StreamReadException;
-import tools.jackson.databind.DatabindException;
-import tools.jackson.databind.ObjectMapper;
+
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import static com.maxi.springboot.springboot_crud.security.TokenJwtConfig.*;
 
@@ -74,15 +75,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .getPrincipal();
         String username = user.getUsername();
         //un jwt, no puede transformar a json
-        //Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
+        Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
 
-        List<String> roles = authResult.getAuthorities()
+        /*List<String> roles = authResult.getAuthorities()
         .stream()
         .map(GrantedAuthority::getAuthority)
-        .toList();
-
+        .filter(r -> r.startsWith("ROLE_"))
+        .toList(); 
+*/
         Claims claims = Jwts.claims()
-                .add("authorities", roles)
+                .add("authorities", new ObjectMapper().writeValueAsString(roles))
                 .add("username", username)
         .build();
 
